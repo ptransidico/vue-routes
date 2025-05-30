@@ -1,0 +1,5 @@
+@import "tailwindcss";
+
+.header {
+    @apply bg-green-400 text-center p-4 text-xl font-bold mb-20;
+}
