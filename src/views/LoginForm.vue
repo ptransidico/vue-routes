@@ -94,6 +94,7 @@ async function handleLogin() {
         });
 
         await router.push("/dashboard");
+        
     } catch (err) {
         if (err.response?.status === 422) {
             const responseErrors = err.response.data.errors || {};

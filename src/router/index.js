@@ -10,7 +10,10 @@ axios.defaults.withCredentials = true
 axios.defaults.withXSRFToken = true
 
 const routes = [
-    { path: '/', name: 'Home', component: Home },
+    { path: '/', 
+        name: 'Home', 
+        component: Home 
+    },
     {
         path: '/about',
         name: 'About',
