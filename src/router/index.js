@@ -3,12 +3,9 @@ import Home from '../views/LoginForm.vue';
 import About from '../views/About.vue';
 import NotFound from '../views/NotFound.vue';
 import Dashboard from '../views/DashBoard.vue';
-import axios from 'axios';
+import axios from '@/lib/axios';
 
-axios.defaults.baseURL = 'http://localhost:8000'
-axios.defaults.withCredentials = true
-axios.defaults.withXSRFToken = true
-
+// Importa le viste che vuoi usare come pagine
 const routes = [
     {
         path: '/',
