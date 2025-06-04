@@ -1,12 +1,15 @@
 import { createRouter, createWebHistory } from 'vue-router';
-import Home from '../views/LoginForm.vue';
-import About from '../views/About.vue';
 import NotFound from '../views/NotFound.vue';
 import Dashboard from '../views/DashBoard.vue';
-import DosePersonale from '../views/DosePersonale.vue';
-import DosePaziente from '../views/DosePaziente.vue';
-import Sorgenti from '../views/Sorgenti.vue';
-import Therabed from '../views/Therabed.vue';
+const Home = () => import('../views/LoginForm.vue');
+const DosePersonale = () => import('../views/DosePersonale.vue');
+const DosePaziente = () => import('../views/DosePaziente.vue');
+const Sorgenti = () => import('../views/Sorgenti.vue');
+const Therabed = () => import('../views/Therabed.vue');
+const Inventario = () => import('../views/Inventario.vue');
+const ForgotPassword = () => import('../views/ForgotPassword.vue');
+
+
 import axios from '@/lib/axios';
 
 // Importa le viste che vuoi usare come pagine
@@ -17,12 +20,10 @@ const routes = [
         component: Home
     },
     {
-        path: '/about',
-        name: 'About',
-        component: About,
-        meta: { requiresAuth: true } // 👈 rotta protetta 
+        path: '/:pathMatch(.*)*',
+        name: 'NotFound',
+        component: NotFound
     },
-    { path: '/:pathMatch(.*)*', name: 'NotFound', component: NotFound },
     {
         path: '/dashboard',
         name: 'Dashboard',
@@ -32,7 +33,7 @@ const routes = [
     {
         path: '/inventario',
         name: 'Inventario',
-        component: () => import('../views/Inventario.vue'),
+        component: Inventario,
         meta: { requiresAuth: true } // 👈 rotta protetta
     },
     {
@@ -41,7 +42,7 @@ const routes = [
         component: Sorgenti,
         meta: { requiresAuth: true } // 👈 rotta protetta
     },
-     {
+    {
         path: '/therabed',
         name: 'Therabed',
         component: Therabed,
@@ -62,7 +63,7 @@ const routes = [
     {
         path: '/forgot-password',
         name: 'ForgotPassword',
-        component: () => import('../views/ForgotPassword.vue'),
+        component: ForgotPassword,
     }
 ];
 
