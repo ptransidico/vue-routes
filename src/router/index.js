@@ -10,9 +10,10 @@ axios.defaults.withCredentials = true
 axios.defaults.withXSRFToken = true
 
 const routes = [
-    { path: '/', 
-        name: 'Home', 
-        component: Home 
+    {
+        path: '/',
+        name: 'Home',
+        component: Home
     },
     {
         path: '/about',
@@ -40,19 +41,20 @@ const router = createRouter({
 });
 
 router.beforeEach(async (to, from, next) => {
-    if (to.meta.requiresAuth) {
-        try {
+    if (to.meta.requiresAuth) { // 🔐 Controlla se la rotta richiede autenticazione
+        try { // 🔐 Prova a fare una richiesta per verificare l'utente loggato
             await axios.get('/api/user') // 🔐 Check utente loggato
             next() // OK, accedi alla pagina
-        } catch (err) {
+        } catch (err) { // ❌ Errore, utente non loggato
             next({ name: 'Home' }) // ❌ Non loggato → redirige a login
         }
-    } else if (to.name === 'Home') {
+    } else if (to.name === 'Home') { // Se la rotta è la Home, controlla se l'utente è già loggato
+        // Se l'utente è loggato, reindirizza al Dashboard
         try {
-            await axios.get('/api/user')
-            next({ name: 'Dashboard' })
+            await axios.get('/api/user') // 🔐 Check utente loggato
+            next({ name: 'Dashboard' }) // Reindirizza a Dashboard se l'utente è loggato
         } catch {
-            next()
+            next()// Se non è loggato, continua con la Home
         }
     } else {
         next() // Pagina non protetta
