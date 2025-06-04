@@ -1,8 +1,13 @@
 <template>
-  <h1>About</h1>
-  <p>Questa è la pagina "Chi siamo".</p>
+  <div class="min-h-screen bg-gray-100">
+    <NavBar />
+    <!-- ✅ aggiungi qui la navbar -->
+    <div>
+      <h1 class="text-2xl font-bold text-gray-800 mb-4 m-5">About</h1>
+    </div>
+  </div>
 </template>
 
 <script setup>
-// Nessun codice reattivo per ora
+import NavBar from "@/components/NavBar.vue"; // Assicurati che il path sia corretto
 </script>
