@@ -42,14 +42,14 @@ const router = createRouter({
 router.beforeEach(async (to, from, next) => {
     if (to.meta.requiresAuth) {
         try {
-            await axios.get('/api/user', { withCredentials: true }) // 🔐 Check utente loggato
+            await axios.get('/api/user') // 🔐 Check utente loggato
             next() // OK, accedi alla pagina
         } catch (err) {
             next({ name: 'Home' }) // ❌ Non loggato → redirige a login
         }
     } else if (to.name === 'Home') {
         try {
-            await axios.get('/api/user', { withCredentials: true })
+            await axios.get('/api/user')
             next({ name: 'Dashboard' })
         } catch {
             next()
