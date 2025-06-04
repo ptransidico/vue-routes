@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import Home from '../views/LoginForm.vue';
+import FormLogin from '../views/FormLogin.vue';
 import About from '../views/About.vue';
 import NotFound from '../views/NotFound.vue';
 import Dashboard from '../views/DashBoard.vue';
@@ -11,6 +12,11 @@ const routes = [
         path: '/',
         name: 'Home',
         component: Home
+    },
+    {
+        path: '/prime-login',
+        name: 'PrimeLogin',
+        component: FormLogin
     },
     {
         path: '/about',
