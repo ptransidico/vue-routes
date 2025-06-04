@@ -56,12 +56,7 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
-import axios from "axios";
-
-// Configura Axios globalmente
-axios.defaults.baseURL = "http://localhost:8000";
-axios.defaults.withCredentials = true;
-axios.defaults.withXSRFToken = true;
+import axios from '@/lib/axios';
 
 const email = ref("");
 const password = ref("");
@@ -94,7 +89,7 @@ async function handleLogin() {
         });
 
         await router.push("/dashboard");
-        
+
     } catch (err) {
         if (err.response?.status === 422) {
             const responseErrors = err.response.data.errors || {};
