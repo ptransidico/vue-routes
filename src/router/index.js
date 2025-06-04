@@ -3,6 +3,10 @@ import Home from '../views/LoginForm.vue';
 import About from '../views/About.vue';
 import NotFound from '../views/NotFound.vue';
 import Dashboard from '../views/DashBoard.vue';
+import DosePersonale from '../views/DosePersonale.vue';
+import DosePaziente from '../views/DosePaziente.vue';
+import Sorgenti from '../views/Sorgenti.vue';
+import Therabed from '../views/Therabed.vue';
 import axios from '@/lib/axios';
 
 // Importa le viste che vuoi usare come pagine
@@ -23,6 +27,36 @@ const routes = [
         path: '/dashboard',
         name: 'Dashboard',
         component: Dashboard,
+        meta: { requiresAuth: true } // 👈 rotta protetta
+    },
+    {
+        path: '/inventario',
+        name: 'Inventario',
+        component: () => import('../views/Inventario.vue'),
+        meta: { requiresAuth: true } // 👈 rotta protetta
+    },
+    {
+        path: '/sorgenti',
+        name: 'Sorgenti',
+        component: Sorgenti,
+        meta: { requiresAuth: true } // 👈 rotta protetta
+    },
+     {
+        path: '/therabed',
+        name: 'Therabed',
+        component: Therabed,
+        meta: { requiresAuth: true } // 👈 rotta protetta
+    },
+    {
+        path: '/dose-personale',
+        name: 'dose-personale',
+        component: DosePersonale,
+        meta: { requiresAuth: true } // 👈 rotta protetta
+    },
+    {
+        path: '/dose-paziente',
+        name: 'dose-paziente',
+        component: DosePaziente,
         meta: { requiresAuth: true } // 👈 rotta protetta
     },
     {
