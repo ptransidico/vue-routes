@@ -44,6 +44,13 @@ router.beforeEach(async (to, from, next) => {
         } catch (err) {
             next({ name: 'Home' }) // ❌ Non loggato → redirige a login
         }
+    } else if (to.name === 'Home') {
+        try {
+            await axios.get('/api/user', { withCredentials: true })
+            next({ name: 'Dashboard' })
+        } catch {
+            next()
+        }
     } else {
         next() // Pagina non protetta
     }
