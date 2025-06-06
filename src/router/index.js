@@ -8,7 +8,7 @@ const Sorgenti = () => import('../views/Sorgenti.vue');
 const Therabed = () => import('../views/Therabed.vue');
 const Inventario = () => import('../views/Inventario.vue');
 const ForgotPassword = () => import('../views/ForgotPassword.vue');
-
+const Settings = () => import('../views/Settings.vue');
 
 import axios from '@/lib/axios';
 
@@ -30,6 +30,12 @@ const routes = [
         component: Dashboard,
         meta: { requiresAuth: true } // 👈 rotta protetta
     },
+    {
+        path: '/settings',
+        name: 'Settings',
+        component: Settings,
+        meta: { requiresAuth: true } // 👈 rotta protetta
+    }, 
     {
         path: '/inventario',
         name: 'Inventario',

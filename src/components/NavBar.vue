@@ -8,18 +8,19 @@
           </div>
           <div class="hidden md:block">
             <div class="ml-10 flex items-baseline space-x-4">
-              <router-link
+              <RouterLink
                 v-for="item in navigation"
                 :key="item.name"
                 :to="item.href"
                 :class="[
                   item.current
-                    ? 'bg-gray-900 text-white'
+                    ? 'bg-gray-600 text-white'
                     : 'text-gray-300 hover:bg-gray-700 hover:text-white',
                   'rounded-md px-0 py-2 text-sm font-medium',
                 ]"
                 :aria-current="item.current ? 'page' : undefined"
-                >{{ item.name }}</router-link>
+                >{{ item.name }}</RouterLink
+              >
             </div>
           </div>
         </div>
@@ -45,7 +46,7 @@
                   <img
                     class="size-8 rounded-full"
                     :src="user.imageUrl"
-                    alt=""
+                    alt="Physico Logo"
                   />
                 </MenuButton>
               </div>
@@ -65,13 +66,20 @@
                     :key="item.name"
                     v-slot="{ active }"
                   >
+                    <RouterLink
+                      v-if="item.name !== 'Sign out'"
+                      :to="item.href"
+                      :class="[
+                        active ? 'bg-gray-100 outline-hidden' : '',
+                        'block px-4 py-2 text-sm text-gray-700',
+                      ]"
+                    >
+                      {{ item.name }}
+                    </RouterLink>
                     <a
-                      :href="item.href || '#'"
-                      @click.prevent="
-                        item.name === 'Sign out'
-                          ? handleLogout()
-                          : navigate(item.href)
-                      "
+                      v-else
+                      href="#"
+                      @click.prevent="handleLogout"
                       :class="[
                         active ? 'bg-gray-100 outline-hidden' : '',
                         'block px-4 py-2 text-sm text-gray-700',
@@ -104,8 +112,8 @@
         <DisclosureButton
           v-for="item in navigation"
           :key="item.name"
-          as="a"
-          :href="item.href"
+          :as="RouterLink"
+          :to="item.href"
           :class="[
             item.current
               ? 'bg-gray-900 text-white'
@@ -113,8 +121,8 @@
             'block rounded-md px-3 py-2 text-base font-medium',
           ]"
           :aria-current="item.current ? 'page' : undefined"
-          >{{ item.name }}</DisclosureButton
-        >
+          >{{ item.name }}
+        </DisclosureButton>
       </div>
       <div class="border-t border-gray-700 pt-4 pb-3">
         <div class="flex items-center px-5">
@@ -139,15 +147,26 @@
           </button>
         </div>
         <div class="mt-3 space-y-1 px-2">
-          <DisclosureButton
-            v-for="item in userNavigation"
-            :key="item.name"
-            as="a"
-            :href="item.href"
-            class="block rounded-md px-3 py-2 text-base font-medium text-gray-400 hover:bg-gray-700 hover:text-white"
-          >
-            {{ item.name }}</DisclosureButton
-          >
+          <template v-for="item in userNavigation" :key="item.name">
+            <DisclosureButton
+              v-if="item.name !== 'Sign out'"
+              :as="RouterLink"
+              :to="item.href"
+              class="block rounded-md px-3 py-2 text-base font-medium text-gray-400 hover:bg-gray-700 hover:text-white"
+            >
+              {{ item.name }}
+            </DisclosureButton>
+            <DisclosureButton
+              v-else
+              as="button"
+              type="button"
+              href="#"
+              @click.prevent="handleLogout"
+              class="block rounded-md px-3 py-2 text-base font-medium text-gray-400 hover:bg-gray-700 hover:text-white"
+            >
+              {{ item.name }}
+            </DisclosureButton>
+          </template>
         </div>
       </div>
     </DisclosurePanel>
@@ -155,10 +174,12 @@
 </template>
 
 <script setup>
-import { useRouter } from "vue-router";
-import axios from "axios";
+import { useRouter, useRoute, RouterLink } from "vue-router";
+import { computed } from "vue";
+import axios from "@/lib/axios";
 
 const router = useRouter();
+const route = useRoute();
 
 async function handleLogout() {
   try {
@@ -166,14 +187,6 @@ async function handleLogout() {
     await router.push("/");
   } catch (err) {
     console.error("Errore durante il logout:", err);
-  }
-}
-
-async function navigate(href) {
-  try {
-    await router.push(href);
-  } catch (err) {
-    console.error("Errore durante la navigazione:", err);
   }
 }
 
@@ -194,17 +207,20 @@ const user = {
   imageUrl:
     "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
 };
-const navigation = [
-  { name: "Dashboard", href: "/dashboard" },
-  { name: "Inventario", href: "/inventario" },
-  { name: "Dose Personale", href: "/dose-personale" },
-  { name: "Dose Paziente", href: "/dose-paziente" },
-  { name: "Therabed", href: "/therabed" },
-  { name: "Sorgenti", href: "/sorgenti" },
-].map((item) => ({
-  ...item,
-  current: router.path === item.href,
-}));
+
+const navigation = computed(() =>
+  [
+    { name: "Dashboard", href: "/dashboard" },
+    { name: "Inventario", href: "/inventario" },
+    { name: "Dose Personale", href: "/dose-personale" },
+    { name: "Dose Paziente", href: "/dose-paziente" },
+    { name: "Therabed", href: "/therabed" },
+    { name: "Sorgenti", href: "/sorgenti" },
+  ].map((item) => ({
+    ...item,
+    current: route.path === item.href,
+  }))
+);
 
 const userNavigation = [
   { name: "Your Profile", href: "/myprofile" },
