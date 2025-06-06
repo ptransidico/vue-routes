@@ -18,7 +18,7 @@ const routes = [
         path: '/',
         name: 'Home',
         component: Home,
-        meta: { requiresGuest: true } // 👈 rotta per utenti non autenticati
+        meta: { requiresGuest: true } // 👈 rotta per utenti non autenticati -- impedisce accesso se già loggato
     },
     {
         path: '/:pathMatch(.*)*',
@@ -103,20 +103,20 @@ const router = createRouter({
 router.beforeEach(async (to, from, next) => {
     const auth = useAuthStore();
 
-    const requiresAuth = to.meta.requiresAuth;
-    const requiresGuest = to.meta.requiresGuest;
+    const requiresAuth = to.meta.requiresAuth; // 👈 rotta protetta
+    const requiresGuest = to.meta.requiresGuest; // 👈 rotta per utenti non autenticati
 
-    const isLoggedIn = auth.user ? true : await auth.fetchUser();
+    const isLoggedIn = auth.user ? true : await auth.fetchUser(); // 👈 verifica se l'utente è loggato
 
-    if (requiresAuth && !isLoggedIn) {
-        return next({ name: 'Home' });
+    if (requiresAuth && !isLoggedIn) { // 🔐 se la rotta richiede autenticazione e l'utente non è loggato
+        return next({ name: 'Home' }); // ❌ Non loggato → redirige a login
     }
 
-    if (requiresGuest && isLoggedIn) {
-        return next({ name: 'Dashboard' });
+    if (requiresGuest && isLoggedIn) { // Se la rotta richiede che l'utente non sia autenticato e l'utente è loggat
+        return next({ name: 'Dashboard' }); // Reindirizza a Dashboard se l'utente è loggato
     }
 
-    next();
+    next(); // Continua con la navigazione
 });
 
 export default router;
