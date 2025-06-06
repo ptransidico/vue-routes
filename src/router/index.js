@@ -10,14 +10,15 @@ const Inventario = () => import('../views/Inventario.vue');
 const ForgotPassword = () => import('../views/ForgotPassword.vue');
 const Settings = () => import('../views/Settings.vue');
 
-import axios from '@/lib/axios';
+import { useAuthStore } from '@/stores/auth';
 
 // Importa le viste che vuoi usare come pagine
 const routes = [
     {
         path: '/',
         name: 'Home',
-        component: Home
+        component: Home,
+        meta: { requiresGuest: true } // 👈 rotta per utenti non autenticati -- impedisce accesso se già loggato
     },
     {
         path: '/:pathMatch(.*)*',
@@ -35,7 +36,7 @@ const routes = [
         name: 'Settings',
         component: Settings,
         meta: { requiresAuth: true } // 👈 rotta protetta
-    }, 
+    },
     {
         path: '/inventario',
         name: 'Inventario',
@@ -78,7 +79,7 @@ const router = createRouter({
     routes
 });
 
-router.beforeEach(async (to, from, next) => {
+/* router.beforeEach(async (to, from, next) => {
     if (to.meta.requiresAuth) { // 🔐 Controlla se la rotta richiede autenticazione
         try { // 🔐 Prova a fare una richiesta per verificare l'utente loggato
             await axios.get('/api/user') // 🔐 Check utente loggato
@@ -97,6 +98,25 @@ router.beforeEach(async (to, from, next) => {
     } else {
         next() // Pagina non protetta
     }
-})
+}) */
+
+router.beforeEach(async (to, from, next) => {
+    const auth = useAuthStore();
+
+    const requiresAuth = to.meta.requiresAuth; // 👈 rotta protetta
+    const requiresGuest = to.meta.requiresGuest; // 👈 rotta per utenti non autenticati
+
+    const isLoggedIn = auth.user ? true : await auth.fetchUser(); // 👈 verifica se l'utente è loggato
+
+    if (requiresAuth && !isLoggedIn) { // 🔐 se la rotta richiede autenticazione e l'utente non è loggato
+        return next({ name: 'Home' }); // ❌ Non loggato → redirige a login
+    }
+
+    if (requiresGuest && isLoggedIn) { // Se la rotta richiede che l'utente non sia autenticato e l'utente è loggat
+        return next({ name: 'Dashboard' }); // Reindirizza a Dashboard se l'utente è loggato
+    }
+
+    next(); // Continua con la navigazione
+});
 
 export default router;
