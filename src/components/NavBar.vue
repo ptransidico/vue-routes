@@ -176,15 +176,15 @@
 <script setup>
 import { useRouter, useRoute, RouterLink } from "vue-router";
 import { computed } from "vue";
-import axios from "@/lib/axios";
+import { useAuthStore } from '@/stores/auth';
 
 const router = useRouter();
 const route = useRoute();
+const auth = useAuthStore();
 
 async function handleLogout() {
   try {
-    await axios.post("/auth/logout");
-    await router.push("/");
+    auth.logout().then(() => router.push('/'));
   } catch (err) {
     console.error("Errore durante il logout:", err);
   }
