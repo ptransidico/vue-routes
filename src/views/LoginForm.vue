@@ -54,8 +54,9 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, watch } from "vue";
 import { useRouter } from "vue-router";
+import { useAuthStore } from '@/stores/auth';
 import axios from '@/lib/axios';
 
 const email = ref("");
@@ -65,10 +66,16 @@ const loading = ref(false);
 const generalError = ref(null);
 const errors = ref({});
 const router = useRouter();
+const auth = useAuthStore();
 const emailInput = ref(null);
 
 onMounted(() => {
     emailInput.value?.focus();
+});
+
+watch([email, password], () => {
+    generalError.value = null;
+    errors.value = {};
 });
 
 function togglePassword() {
@@ -88,6 +95,7 @@ async function handleLogin() {
             password: password.value,
         });
 
+        await auth.fetchUser(); // ✅ aggiorna lo store Pinia
         await router.push("/dashboard");
 
     } catch (err) {
