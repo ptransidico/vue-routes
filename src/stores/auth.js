@@ -5,11 +5,11 @@ export const useAuthStore = defineStore('auth', {
     state: () => ({
         user: null,
     }),
-    getters: {
-        isLoggedIn: (state) => !!state.user,
+    getters: { // Getters to access state properties
+        isLoggedIn: (state) => !!state.user, // Returns true if user is logged in
     },
     actions: {
-        async fetchUser() {
+        async fetchUser() { // Fetches the current user from the API
             try {
                 const response = await axios.get('/api/user');
                 this.user = response.data;
@@ -19,7 +19,7 @@ export const useAuthStore = defineStore('auth', {
                 return false;
             }
         },
-        async logout() {
+        async logout() { // Logs out the user by making an API call
             await axios.post('/auth/logout');
             this.user = null;
         }
